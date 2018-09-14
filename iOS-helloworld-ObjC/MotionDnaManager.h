@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  MotionDnaManager.h
 //  iOS-helloworld-ObjC
 //
 //  Created by James Grantham on 9/14/18.
@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MotionDnaManager.h"
+#import <MotionDnaSDK/MotionDnaSDK.h>
 
-@interface ViewController : UIViewController
-@property (strong, nonatomic) MotionDnaManager *manager;
+@class ViewController;
+
+@interface MotionDnaManager : MotionDnaSDK
+@property (weak, nonatomic) ViewController *receiver;
 -(void)receiveMotionDna:(MotionDna*)motionDna;
 -(void)receiveNetworkData:(MotionDna*)motionDna;
 -(void)receiveNetworkData:(NetworkCode)opcode WithPayload:(NSDictionary*)payload;
+-(void)reportError:(ErrorCode)error WithMessage:(NSString*)message;
 @end
-
