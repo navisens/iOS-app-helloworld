@@ -80,7 +80,7 @@ Add the MotionDnaManager as a property of your view ViewController
 @property (nonatomic, strong) MotionDnaManager *_manager;
 ```
 
-Within the ``` viewDidLoad ``` method of your view controller add the following
+The ``` viewDidLoad ``` method of your view controller is a good place for initializing and could include the following object instantiation and method calls.
 
 ##### ViewController.m
 ``` Objective-C
