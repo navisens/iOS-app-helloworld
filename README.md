@@ -5,7 +5,7 @@ An example Objective-C iOS project using the Navisens MotionDNA SDK
 
 run ```pod install``` from the project folder to install necessary dependencies
 
-# Getting Started (Native)
+# Getting Started
 
 Open a new project in xcode and navigate to the project folder.
 
