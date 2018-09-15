@@ -112,7 +112,7 @@ The structure of this class should resemble the following code and implement a s
 
 ```
 
-The ``` receiveMotionDna:(MotionDna*)motionDna ``` method is the key method in using the SDK. It will be responsible for passing location data from our core to your project. The MotionDna oject contains your x,y,and z coordinates (in meters) with respect to your starting position, as well as a your current latitude and longitude and several other metrics of interest which you can read about in more detail in our documentation [here](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md#getters).
+The ``` receiveMotionDna:(MotionDna*)motionDna ``` method is the key method in using the SDK. It will be responsible for passing location data from our core to your project. The MotionDna object contains your x,y,and z coordinates (in meters) with respect to your starting position, as well as a your current latitude and longitude and several other metrics of interest which you can read about in more detail in our [documentation](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md#getters).
 
 Our SDK also support location sharing through the use of a server and the startUDP() method calls. Data is received by the  ``` receiveNetworkData ``` methods. The base method is passed a MotionDna object that for each user that is also sharing with the same host, developer key, and room.
 
