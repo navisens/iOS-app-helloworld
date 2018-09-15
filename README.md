@@ -59,7 +59,7 @@ This will install the SDK to your project folder and generate an xcode workspace
 ## What it does
 This project builds and runs a bare bones implementation of our SDK core. 
 
-The core is initialized and activated by toggling a UISwitch, triggering a call to the ```initializeSDK:``` method in the view controller. After this occurs the controller checks for necessary location permission and if requirements are satisfied, begins to receive Navisens MotionDNA location estimates through the ```receiveMotionDna:``` callback method. The data received is used to update the appropriate UILabel element with a user's relative x,y and z coordinated along with GPS data and motion categorizations.
+The core is initialized and activated on startup in the view controller triggering a call to the ```startMotionDna``` method in the view controller. After this occurs the controller checks for necessary location permission and if requirements are satisfied, begins to receive Navisens MotionDNA location estimates through the ```receiveMotionDna:``` callback method. The data received is used to update the appropriate label element with a user's relative x,y and z coordinated along with GPS data and motion categorizations.
 
 Before attempting to run this project please be sure you have obtained a develepment key from Navisens. A key may be acquired free for testing purposes at [this link](https://navisens.com/index.html#contact)
 
@@ -138,9 +138,6 @@ Within the ``` viewDidLoad ``` method of your view controller add the following
 }
 ```
 
-Substitute ``` <developer-key> ``` with your own Navisens provided developer key. If you do not yet have one then please navigate to our [developer sign up](https://www.navisens.com/index.html#contact) to request a free key.
+Substitute ``` <developer-key> ``` with your own Navisens provided developer key. Again, if you do not yet have one then please navigate to our [developer sign up](https://www.navisens.com/index.html#contact) to request a free key.
 
 Running this project will begin to show your location estimation in the console. Walk around to see how it changes your x, y, and z coordinates.
-
-The project in this app is a little more involved but follows the same principles. More updates are soon to follow
-
