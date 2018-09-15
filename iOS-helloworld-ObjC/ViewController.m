@@ -6,6 +6,12 @@
 //  Copyright © 2018 Navisens. All rights reserved.
 //
 
+/*
+ * For complete documentation on Navisens SDK API
+ * Please go to the following link:
+ * https://github.com/navisens/NaviDocs/blob/master/API.iOS.md
+ */
+
 #import "ViewController.h"
 
 @interface ViewController ()
@@ -54,6 +60,9 @@ NSString *motionTypeToNSString(MotionType motionType) {
 
 #pragma mark MotionDna Callback Methods
 
+//    This event receives the estimation results using a MotionDna object.
+//    Check out the Getters section to learn how to read data out of this object.
+
 - (void)receiveMotionDna:(MotionDna *)motionDna {
         Location location = [motionDna getLocation];
         XYZ localLocation = location.localLocation;
@@ -74,6 +83,14 @@ NSString *motionTypeToNSString(MotionType motionType) {
         [self->_receiveMotionDnaTextField setText:motionDnaString];
     });
 }
+
+//    This event receives estimation results from other devices in the server room. In order
+//    to receive anything, make sure you call startUDP to connect to a room. Again, it provides
+//    access to a MotionDna object, which can be unpacked the same way as above.
+//
+//
+//    If you aren't receiving anything, then the room may be full, or there may be an error in
+//    your connection. See the reportError event below for more information.
 
 - (void)receiveNetworkData:(MotionDna *)motionDna {
     [_networkUsers setObject:motionDna forKey:[motionDna getID]];

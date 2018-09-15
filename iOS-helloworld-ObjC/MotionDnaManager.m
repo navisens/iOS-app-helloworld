@@ -16,6 +16,8 @@
     }
 }
 
+//    Report any errors of the estimation or internal SDK
+
 - (void)reportError:(ErrorCode)error WithMessage:(NSString *)message {
     
 }
