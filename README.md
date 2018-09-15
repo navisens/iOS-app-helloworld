@@ -141,3 +141,5 @@ Within the ``` viewDidLoad ``` method of your view controller add the following
 Substitute ``` <developer-key> ``` with your own Navisens provided developer key. Again, if you do not yet have one then please navigate to our [developer sign up](https://www.navisens.com/index.html#contact) to request a free key.
 
 Running this project will begin to show your location estimation in the console. Walk around to see how it changes your x, y, and z coordinates.
+
+Additional configuration options are described in the project source and our iOS [documentation](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md). 
