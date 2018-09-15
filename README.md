@@ -91,6 +91,6 @@ Substitute ``` <developer-key> ``` with your own Navisens provided developer key
 
 Running this project will begin to show your location estimation in the console. Walk around to see how it changes your x, y, and z coordinates.
 
-### More Info
+## More Info
 
 Additional configuration options are described in the project source and our iOS [documentation](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md). 
