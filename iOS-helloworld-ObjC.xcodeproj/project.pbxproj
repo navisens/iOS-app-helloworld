@@ -133,6 +133,11 @@
 				TargetAttributes = {
 					E1B90C28214C2492003FE6C7 = {
 						CreatedOnToolsVersion = 9.4.1;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -359,6 +364,7 @@
 				DEVELOPMENT_TEAM = Z633UZ59K8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "iOS-helloworld-ObjC/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -378,6 +384,7 @@
 				DEVELOPMENT_TEAM = Z633UZ59K8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "iOS-helloworld-ObjC/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

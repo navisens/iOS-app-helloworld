@@ -12,6 +12,9 @@
 @property (weak, nonatomic) IBOutlet UITextView *receiveMotionDnaTextField;
 @property (weak, nonatomic) IBOutlet UITextView *receiveNetworkDataTextField;
 
+@property (strong, nonatomic) NSMutableDictionary<NSString*, MotionDna*> *networkUsers;
+@property (strong, nonatomic) NSMutableDictionary<NSString *, NSNumber*> *networkUsersTimestamps;
+
 @end
 
 NSString *motionTypeToNSString(MotionType motionType) {
@@ -36,6 +39,10 @@ NSString *motionTypeToNSString(MotionType motionType) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    _networkUsers = [NSMutableDictionary dictionary];
+    _networkUsersTimestamps = [NSMutableDictionary dictionary];
+    
     [self startMotionDna];
 }
 
@@ -48,26 +55,50 @@ NSString *motionTypeToNSString(MotionType motionType) {
 #pragma mark MotionDna Callback Methods
 
 - (void)receiveMotionDna:(MotionDna *)motionDna {
-    Location location = [motionDna getLocation];
-    XYZ localLocation = location.localLocation;
-    GlobalLocation globalLocation = location.globalLocation;
-    Motion motion = [motionDna getMotion];
+        Location location = [motionDna getLocation];
+        XYZ localLocation = location.localLocation;
+        GlobalLocation globalLocation = location.globalLocation;
+        Motion motion = [motionDna getMotion];
+        
+        NSString *motionDnaLocalString = [NSString stringWithFormat:@"Local XYZ Coordinates (meters): \n(%.2f,%.2f,%.2f)",localLocation.x,localLocation.y,localLocation.z];
+        NSString *motionDnaHeadingString = [NSString stringWithFormat:@"Current Heading: %.2f",location.heading];
+        NSString *motionDnaGlobalString = [NSString stringWithFormat:@"Global Position: \n(Lat: %.6f, Lon: %.6f)",globalLocation.latitude,globalLocation.longitude];
+        NSString *motionDnaMotionTypeString = [NSString stringWithFormat:@"Motion Type: %@",motionTypeToNSString(motion.motionType)];
+        
+    NSString *motionDnaString = [NSString stringWithFormat:@"MotionDna Location:\n%@\n%@\n%@\n%@",motionDnaLocalString,
+                                     motionDnaHeadingString,
+                                     motionDnaGlobalString,
+                                     motionDnaMotionTypeString];
     
-    NSString *motionDnaLocalString = [NSString stringWithFormat:@"Local XYZ Coordinates (meters) (%.2f,%.2f,%.2f)",localLocation.x,localLocation.y,localLocation.z];
-    NSString *motionDnaHeadingString = [NSString stringWithFormat:@"Current Heading: %.2f",location.heading];
-    NSString *motionDnaGlobalString = [NSString stringWithFormat:@"Global Position: (Lat: %.6f, Lon: %.6f)",globalLocation.latitude,globalLocation.longitude];
-    NSString *motionDnaMotionTypeString = [NSString stringWithFormat:@"MotionType: %@",motionTypeToNSString(motion.motionType)];
-    
-    NSString *motionDnaString = [NSString stringWithFormat:@"%@\n%@\n%@\n%@",motionDnaLocalString,
-                                 motionDnaHeadingString,
-                                 motionDnaGlobalString,
-                                 motionDnaMotionTypeString];
-    
-    [_receiveMotionDnaTextField setText:motionDnaString];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self->_receiveMotionDnaTextField setText:motionDnaString];
+    });
 }
 
 - (void)receiveNetworkData:(MotionDna *)motionDna {
+    [_networkUsers setObject:motionDna forKey:[motionDna getID]];
+    double timeSinceBootSeconds = [[NSProcessInfo processInfo] systemUptime];
+    [_networkUsersTimestamps setObject:@(timeSinceBootSeconds) forKey:[motionDna getID]];
+    __block NSString *activeNetworkUsersString = [NSString string];
+    NSMutableArray<NSString*> *toRemove = [NSMutableArray array];
     
+    activeNetworkUsersString = [activeNetworkUsersString stringByAppendingString:@"Network Shared Devices:\n"];
+    [_networkUsers enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, MotionDna * _Nonnull user, BOOL * _Nonnull stop) {
+        if (timeSinceBootSeconds - [[self->_networkUsersTimestamps objectForKey:[user getID]] doubleValue] > 2.0) {
+            [toRemove addObject:[user getID]];
+        } else {
+            activeNetworkUsersString = [activeNetworkUsersString stringByAppendingString:[[[user getDeviceName] componentsSeparatedByString:@";"] lastObject]];
+            XYZ location = [user getLocation].localLocation;
+            activeNetworkUsersString = [activeNetworkUsersString stringByAppendingString:[NSString stringWithFormat:@" (%.2f, %.2f, %.2f)\n",location.x, location.y, location.z]];
+        }
+    }];
+    for (NSString *key in toRemove) {
+        [_networkUsers removeObjectForKey:key];
+        [_networkUsersTimestamps removeObjectForKey:key];
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self->_receiveNetworkDataTextField.text = activeNetworkUsersString;
+    });
 }
 
 - (void)receiveNetworkData:(NetworkCode)opcode WithPayload:(NSDictionary *)payload {
@@ -76,6 +107,7 @@ NSString *motionTypeToNSString(MotionType motionType) {
 
 - (void)startMotionDna {
     _manager = [[MotionDnaManager alloc] init];
+    _manager.receiver = self;
     
     //    This functions starts up the SDK. You must pass in a valid developer's key in order for
     //    the SDK to function. IF the key has expired or there are other errors, you may receive
