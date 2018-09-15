@@ -71,7 +71,7 @@ Our SDK also support location sharing through the use of a server and the startU
 
 The ``` reportError ``` callback received information regarding any issue that may have arisen over the course of trying to run our SDK. This can range from authentication errors with your developer key, to missing permissions that are needed for our system to run. For a full list see our documentation [here](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md#reporterror_-errorcode-errorcode-withmessage-s-string).
 
-## Running the SDK
+### Running the SDK
 
 #### In Objective-C
 Add the MotionDnaManager as a property of your view ViewController
