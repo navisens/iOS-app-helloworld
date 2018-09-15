@@ -9,53 +9,6 @@ run ```pod install``` from the project folder to install necessary dependencies
 
 Open a new project in xcode and navigate to the project folder.
 
-## Installing the MotionDna SDK
-
-Make sure you already have cocoapods installed. This is the package manager we use to distribute our SDK and is the simplest way for you to integrate it into your app.
-
-To install the SDK navigate to the root folder of your project in terminal and type the following command.
-
-``` pod init ```
-
-This will generate a Podfile which you can specify our SDK as one of your dependencies for our app.
-
-Open the Podfile in your project folder. It should look something like this:
-
-``` bash
-# Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
-
-target 'YourProjectName' do
-  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
-
-  # Pods for YourProjectName
-
-end
-```
-
-Add the line ``` pod 'MotionDnaSDK', :git => 'https://github.com/navisens/iOS-SDK.git' ``` to the file it should now resemble the text below.
-
-``` bash
-# Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
-
-target 'YourProjectName' do
-  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
-
-  # Pods for YourProjectName
-  pod 'MotionDnaSDK', :git => 'https://github.com/navisens/iOS-SDK.git'
-end
-```
-
-Save this file and return to the terminal within your project folder. Type the following command.
-
-``` pod install ```
-
-This will install the SDK to your project folder and generate an xcode workspace from which to build and run your project. If you already have xcode open at this point you should close it and reopen using this generated workspace.
-
-
 ## What it does
 This project builds and runs a bare bones implementation of our SDK core. 
 
@@ -66,7 +19,7 @@ Before attempting to run this project please be sure you have obtained a develep
 For more complete documentation on our SDK please visit our [NaviDocs](https://github.com/navisens/NaviDocs)
 
 
-## Setting up your Project for MotionDna
+### Implementation
 
 The Navisens MotionDna SDK is implemented in your project by first subclassing the MotionDnaSDK class and then implementing select callbacks for receiving estimation data and other various pieces of information
 
