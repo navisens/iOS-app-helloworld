@@ -89,7 +89,10 @@ The ``` viewDidLoad ``` method of your view controller is a good place for initi
 
 Substitute ``` <developer-key> ``` with your own Navisens provided developer key. Again, if you do not yet have one then please navigate to our [developer sign up](https://www.navisens.com/index.html#contact) to request a free key.
 
-Running this project will begin to show your location estimation in the console. Walk around to see how it changes your x, y, and z coordinates.
+Running this project will begin to show your location estimation in the phone screen. Walk around to see how it changes your x, y, and z coordinates.
+
+If you have two or more phones running with the same developer key you will see their locations appear and update in realtime at the bottom on the opposite phone
+
 
 ## More Info
 
