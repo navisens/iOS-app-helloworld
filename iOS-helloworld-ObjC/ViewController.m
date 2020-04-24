@@ -48,7 +48,6 @@ NSString *motionTypeToNSString(MotionType motionType) {
     
     _networkUsers = [NSMutableDictionary dictionary];
     _networkUsersTimestamps = [NSMutableDictionary dictionary];
-    
     [self startMotionDna];
 }
 
@@ -64,20 +63,37 @@ NSString *motionTypeToNSString(MotionType motionType) {
 //    Check out the Getters section to learn how to read data out of this object.
 
 - (void)receiveMotionDna:(MotionDna *)motionDna {
-        Location location = [motionDna getLocation];
-        XYZ localLocation = location.localLocation;
-        GlobalLocation globalLocation = location.globalLocation;
-        Motion motion = [motionDna getMotion];
+    Location location = [motionDna getLocation];
+    XYZ localLocation = location.localLocation;
+    GlobalLocation globalLocation = location.globalLocation;
+    Motion motion = [motionDna getMotion];
+    
+    NSString *motionDnaLocalString = [NSString stringWithFormat:@"Local XYZ Coordinates (meters): \n(%.2f,%.2f,%.2f)",localLocation.x,localLocation.y,localLocation.z];
+    NSString *motionDnaHeadingString = [NSString stringWithFormat:@"Current Heading: %.2f",location.heading];
+    NSString *motionDnaGlobalString = [NSString stringWithFormat:@"Global Position: \n(Lat: %.6f, Lon: %.6f)",globalLocation.latitude,globalLocation.longitude];
+    NSString *motionDnaMotionTypeString = [NSString stringWithFormat:@"Motion Type: %@",motionTypeToNSString(motion.motionType)];
+    NSDictionary<NSString*,Classifier*> *classifiers = [motionDna getClassifiers];
+    NSString *motionDnaPredictionsString = @"Predictions (BETA):\n";
+    for (NSString *classifierKey in classifiers) {
+        motionDnaPredictionsString = [motionDnaPredictionsString stringByAppendingFormat:@"Classifier: %@\n",classifierKey];
+        Classifier *classifier = [classifiers objectForKey:classifierKey];
         
-        NSString *motionDnaLocalString = [NSString stringWithFormat:@"Local XYZ Coordinates (meters): \n(%.2f,%.2f,%.2f)",localLocation.x,localLocation.y,localLocation.z];
-        NSString *motionDnaHeadingString = [NSString stringWithFormat:@"Current Heading: %.2f",location.heading];
-        NSString *motionDnaGlobalString = [NSString stringWithFormat:@"Global Position: \n(Lat: %.6f, Lon: %.6f)",globalLocation.latitude,globalLocation.longitude];
-        NSString *motionDnaMotionTypeString = [NSString stringWithFormat:@"Motion Type: %@",motionTypeToNSString(motion.motionType)];
-        
-    NSString *motionDnaString = [NSString stringWithFormat:@"MotionDna Location:\n%@\n%@\n%@\n%@",motionDnaLocalString,
-                                     motionDnaHeadingString,
-                                     motionDnaGlobalString,
-                                     motionDnaMotionTypeString];
+        motionDnaPredictionsString = [motionDnaPredictionsString stringByAppendingFormat:@"\tprediction: %@ confidence: %.2f\n",classifier.currentPredictionLabel,classifier.currentPredictionConfidence];
+        motionDnaPredictionsString = [motionDnaPredictionsString stringByAppendingString:@" stats:\n"];
+        for (NSString *predictionLabel in classifier.predictionStats) {
+            PredictionStats *predictionStats = [classifier.predictionStats objectForKey:predictionLabel];
+            motionDnaPredictionsString = [motionDnaPredictionsString stringByAppendingFormat:@"\t%@\n",predictionLabel];
+            motionDnaPredictionsString = [motionDnaPredictionsString stringByAppendingFormat:@"\t duration: %.2f\n",predictionStats.duration];
+            motionDnaPredictionsString = [motionDnaPredictionsString stringByAppendingFormat:@"\t distance: %.2f\n",predictionStats.distance];
+        }
+        motionDnaPredictionsString = [motionDnaPredictionsString stringByAppendingString:@"\n"];
+    }
+    [motionDnaPredictionsString stringByAppendingFormat:@"\n%@",classifiers];
+    NSString *motionDnaString = [NSString stringWithFormat:@"MotionDna Location:\n%@\n%@\n%@\n%@\n\n%@",motionDnaLocalString,
+                                 motionDnaHeadingString,
+                                 motionDnaGlobalString,
+                                 motionDnaMotionTypeString,
+                                 motionDnaPredictionsString];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self->_receiveMotionDnaTextField setText:motionDnaString];
@@ -113,6 +129,7 @@ NSString *motionTypeToNSString(MotionType motionType) {
         [_networkUsers removeObjectForKey:key];
         [_networkUsersTimestamps removeObjectForKey:key];
     }
+
     dispatch_async(dispatch_get_main_queue(), ^{
         self->_receiveNetworkDataTextField.text = activeNetworkUsersString;
     });
