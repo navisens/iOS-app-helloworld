@@ -1,12 +1,12 @@
-# iOS App Hello World
-___Note: This app is designed to run on iOS 9.1 or higher___
-
+# iOS App Hello World (Objective-C)
 An example Objective-C iOS project using the Navisens MotionDNA SDK
+
+___Note: This app is designed to run on iOS 9.1 or higher___
 
 run ```pod install``` from the project folder to install necessary dependencies
 
 ## What it does
-This project builds and runs a bare bones implementation of our SDK core. 
+This project builds and runs a bare bones implementation of our SDK core.
 
 The core is initialized and activated on startup in the view controller triggering a call to the ```startMotionDna``` method in the view controller. After this occurs the controller checks for necessary location permission and if requirements are satisfied, begins to receive Navisens MotionDNA location estimates through the ```receiveMotionDna:``` callback method. The data received is used to update the appropriate label element with a user's relative x,y and z coordinated along with GPS data and motion categorizations.
 
@@ -15,19 +15,28 @@ Before attempting to run this project please be sure you have obtained a develep
 For more complete documentation on our SDK please visit our [NaviDocs](https://github.com/navisens/NaviDocs)
 
 
-### Implementation
+### Setup
 
-The Navisens MotionDna SDK is implemented in your project by first subclassing the MotionDnaSDK class and then implementing select callbacks for receiving estimation data and other various pieces of information
+Enter your developer key in `ViewController.m` and run the app.
+```Objective-C
+[_manager runMotionDna:@"<ENTER YOUR DEV KEY HERE>"];
+```
 
-The structure of this class should resemble the following code and implement a subset of the methods listed.
+Walk around to see your position update.
 
-##### In Objective-C:
-###### MotionDnaManager.h
+## How the SDK works
+
+Please refer to our [NaviDoc](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md#api) for full documentation.
+
+### How you include (and update) the SDK
+
+Add `pod 'MotionDnaSDK` to your podfile and run `pod install` to load the SDK. If there has been a version update to the SDK recently then run `pod update` from the project folder to update the repo.
+
+### How you get your [estimated] position
+
+In our SDK we provide `MotionDnaSDK` class which you subclass and override. In order to receive estimated positiona and other data, you need to override the key methods listed below.
+
 ``` Objective-C
-#import <Foundation/foundation.h>
-#import <MotionDnaSDK/MotionDnaSDK.h>
-#import <MotionDnaSDK/MotionDna.h>
-
 @interface MotionDnaManager: MotionDnaSDK
 
 -(void)receiveMotionDna:(MotionDna*)motionDna;
@@ -37,63 +46,84 @@ The structure of this class should resemble the following code and implement a s
 
 @end
 ```
-###### MotionDnaManager.m
+
+The ``` receiveMotionDna:(MotionDna*)motionDna ``` callback method returns a MotionDna estimation object contains [location, heading and motion type](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md#getters) among many other interesting data on a users current state. Here is how we might print it out.
 ``` Objective-C
-@implementation HelloWorld
-
 -(void)receiveMotionDna:(MotionDna*)motionDna {
-  NSLog("%.8f %.8f %.8f %.8f\n", motionDna.getLocation().heading, motionDna.getLocation().localLocation.x, motionDna.getLocation().localLocation.y, motionDna.getLocation().localLocation.z);
+  NSLog("%.8f %.8f %.8f %.8f\n",  motionDna.getLocation().heading,
+                                  motionDna.getLocation().localLocation.x,
+                                  motionDna.getLocation().localLocation.y,
+                                  motionDna.getLocation().localLocation.z);
 }
-
--(void)receiveNetworkData:(MotionDna*)motionDna {
-
-}
-
--(void)receiveNetworkData:(NetworkCode)opcode WithPayload:(NSDictionary*)payload {
-
-}
-
--(void)reportError:(ErrorCode)error WithMessage:(NSString*)message {
-
-}
-
-@end
-
 ```
-
-The ``` receiveMotionDna:(MotionDna*)motionDna ``` method is the key method in using the SDK. It will be responsible for passing location data from our core to your project. The MotionDna object contains your x,y,and z coordinates (in meters) with respect to your starting position, as well as a your current latitude and longitude and several other metrics of interest which you can read about in more detail in our [documentation](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md#getters).
-
-Our SDK also support location sharing through the use of a server and the startUDP() method calls. Data is received by the  ``` receiveNetworkData ``` methods. The base method is passed a MotionDna object that for each user that is also sharing with the same host, developer key, and room.
-
-The ``` reportError ``` callback received information regarding any issue that may have arisen over the course of trying to run our SDK. This can range from authentication errors with your developer key, to missing permissions that are needed for our system to run. For a full list see our documentation [here](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md#reporterror_-errorcode-errorcode-withmessage-s-string).
-
 ### Running the SDK
 
 #### In Objective-C
-Add the MotionDnaManager as a property of your view ViewController
-##### ViewController.h
+Add the subclassed MotionDnaSDK as a property of your View Controller
+
 ``` Objective-C
-@property (nonatomic, strong) MotionDnaManager *_manager;
+@property (nonatomic, strong) MotionDnaManager *motionDnaSDK;
 ```
 
-The ``` viewDidLoad ``` method of your view controller is a good place for initializing and could include the following object instantiation and method calls.
+## Common Configurations (with code examples)
+### Startup
+```java
+[_motionDnaSDK runMotionDna:@"<ENTER YOUR DEV KEY HERE>"];
+```
+### Startup with Configuration (Model Selection)
+Additional configuration options will be added over time. Current configuration options are only for model seletion in motion estimation. Currently supported models are "standard", "headmount", and "chestmount".
 
-##### ViewController.m
-``` Objective-C
-- (void)viewDidLoad {
-  _manager = [[MotionDnaManager alloc] init];
-  [_manager runMotionDna:str];
-  [_manager setLocationNavisens];
-}
+```java
+NSMutableDictionary<NString*, NSObject*> *configuration = [NSMutableDictionary dictionary];
+configuration[@"model"] = @"standard";
+[_motionDnaSDK runWithDeveloperKey:"<developer-key>" andConfigurations:configuration];
 ```
 
-Substitute ``` <developer-key> ``` with your own Navisens provided developer key. Again, if you do not yet have one then please navigate to our [developer sign up](https://www.navisens.com/index.html#contact) to request a free key.
+### Setting SDK Options
+#### Common Task:
+You only require an update of a users position every half a second and would like a user's position in the global frame (latitude and longitude) to be as accuracte as possible
+```Objective-C
+[_motionDnaSDK setCallbackUpdateRateInMs:500];
+[_motionDnaSDK setExternalPositioningState:HIGH_ACCURACY];
+```
+These should alway be called after the runWithDeveloperKey:andConfigurations: or runMotionDna: method has been called
 
-Running this project will begin to show your location estimation in the phone screen. Walk around to see how it changes your x, y, and z coordinates.
+-------------
 
-If you have two or more phones running with the same developer key you will see their locations appear and update in realtime at the bottom on the opposite phone
+### _Assigning initial position Locally (Cartesian X and Y coordinates)_
+#### Common Tasks:
+You know that a users position should be shifted by 4 meters in the X direction and 9 in the Y direction. Heading should not change. If the current estimated position is (4,3) the updated position should be (8,12)
+
+``` [_motionDnaSDK setCartesianPositionX:4 Y:9]; ```
+
+You wish to update your X and Y positions to 3 in the X and 4 meters in the Y direction. Heading should not be affected
+
+``` [_motionDnaSDK setCartesianOffsetInMetersX:3 Y:4]; ```
+
+-------------
+
+### _Assigning initial position Globally (Latitude and Longitude coordinates)_
+
+#### Common Tasks:
+ You need to update the latitude and longitude to (37.756581, -122.419155). Heading can be taken from the device's compass
+
+``` [_motionDnaSDK setLocationLatitude:37.756581 Longitude:-122.419155]; ```
+
+ You know the users location is latitude and longitude of (37.756581, -122.419155) with a heading of 3 degrees and need to indicate that to the SDK
+
+``` [_motionDnaSDK setLocationLatitude:37.756581 Longitude:-122.419155 AndHeadingInDegrees:3.0]; ```
+
+You have a use case that will be outside often and wish to have the SDK determine a users latitude, longitude and heading automatically
+
+``` [_motionDnaSDK setLocationNavisens]; ```
+
+------------
+
+### _Observations (EXPERIMENTAL)_
+#### Common Task:
+A user is indoors and revisits the same areas frequently. Through some outside mechanism the developer is aware of a return to certain landmarks and would like to indicate that the user has returned to a landmark with ID of 38 to aid in the estimation of a user's position. The developer also knows that this observation was made within 3 meters of the landmark 38
+
+``` [_motionDnaSDK recordObservationWithIdentifier:38 andUncertainty:3.0]; ```
 
 
-## More Info
-
-Additional configuration options are described in the project source and our iOS [documentation](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md). 
+## Additional configuration options are described in the project source and our [iOS Documentation](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md).
