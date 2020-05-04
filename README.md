@@ -47,7 +47,8 @@ In our SDK we provide `MotionDnaSDK` class which you subclass and override. In o
 @end
 ```
 
-The ``` receiveMotionDna:(MotionDna*)motionDna ``` callback method returns a MotionDna estimation object contains [location, heading and motion type](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md#getters) among many other interesting data on a users current state. Here is how we might print it out.
+The ``` receiveMotionDna:(MotionDna*)motionDna ``` callback method returns a MotionDna estimation object containing [location, heading and motion type](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md#getters) among many other interesting data on a users current state. Here is how we might print it out.
+
 ``` Objective-C
 -(void)receiveMotionDna:(MotionDna*)motionDna {
   NSLog("%.8f %.8f %.8f %.8f\n",  motionDna.getLocation().heading,
@@ -58,7 +59,6 @@ The ``` receiveMotionDna:(MotionDna*)motionDna ``` callback method returns a Mot
 ```
 ### Running the SDK
 
-#### In Objective-C
 Add the subclassed MotionDnaSDK as a property of your View Controller
 
 ``` Objective-C
