@@ -7,12 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MotionDnaManager.h"
+#import <MotionDnaSDK/MotionDnaSDK.h>
 
-@interface ViewController : UIViewController
-@property (strong, nonatomic) MotionDnaManager *manager;
--(void)receiveMotionDna:(MotionDna*)motionDna;
--(void)receiveNetworkData:(MotionDna*)motionDna;
--(void)receiveNetworkData:(NetworkCode)opcode WithPayload:(NSDictionary*)payload;
+@interface ViewController : UIViewController<MotionDnaSDKDelegate>
 @end
 
