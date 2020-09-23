@@ -178,17 +178,16 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-iOS-helloworld-ObjC/Pods-iOS-helloworld-ObjC-frameworks.sh",
-				"${PODS_ROOT}/MotionDnaSDK/MotionDnaSDK.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iOS-helloworld-ObjC/Pods-iOS-helloworld-ObjC-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionDnaSDK.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iOS-helloworld-ObjC/Pods-iOS-helloworld-ObjC-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iOS-helloworld-ObjC/Pods-iOS-helloworld-ObjC-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iOS-helloworld-ObjC/Pods-iOS-helloworld-ObjC-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F85DF035CDD8FB06D55B83BF /* [CP] Check Pods Manifest.lock */ = {
