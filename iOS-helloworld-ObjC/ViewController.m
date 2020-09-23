@@ -16,10 +16,6 @@
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *receiveMotionDnaTextField;
-@property (weak, nonatomic) IBOutlet UITextView *receiveNetworkDataTextField;
-
-@property (strong, nonatomic) NSMutableDictionary<NSString*, MotionDna*> *networkUsers;
-@property (strong, nonatomic) NSMutableDictionary<NSString *, NSNumber*> *networkUsersTimestamps;
 @property (strong, nonatomic) MotionDnaSDK *motionDnaSDK;
 -(void)receiveMotionDna:(MotionDna*)motionDna;
 @end
@@ -28,10 +24,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    _networkUsers = [NSMutableDictionary dictionary];
-    _networkUsersTimestamps = [NSMutableDictionary dictionary];
-    [self startMotionDna];
+    [self startDemo];
 }
 
 
@@ -81,7 +74,7 @@
     });
 }
 
-- (void)startMotionDna {
+- (void)startDemo {
     _motionDnaSDK = [[MotionDnaSDK alloc] initWithDelegate:self];
     NSLog(@"SDK Version: %@",MotionDnaSDK.SDKVersion);
     //    This functions starts up the SDK. You must pass in a valid developer's key in order for
