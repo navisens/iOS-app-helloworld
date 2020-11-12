@@ -19,7 +19,7 @@ For more complete documentation on our SDK please visit our [NaviDocs](https://g
 
 Enter your developer key in `ViewController.m` and run the app.
 ```Objective-C
-[_manager runMotionDna:@"<ENTER YOUR DEV KEY HERE>"];
+[_manager startWithDeveloperKey:@"<ENTER YOUR DEV KEY HERE>"];
 ```
 
 Walk around to see your position update.
@@ -44,14 +44,14 @@ In our SDK we provide `MotionDnaSDKDelegate` interface which you implement in yo
 @end
 ```
 
-The ``` receiveMotionDna:(MotionDna*)motionDna ``` callback method returns a MotionDna estimation object containing [location, heading and motion type](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md#getters) among many other interesting data on a users current state. Here is how we might print it out.
+The ``` receiveMotionDna:(MotionDna*)motionDna ``` callback method returns a MotionDna estimation object containing [location, heading and motion classification](https://github.com/navisens/NaviDocs/blob/master/API.iOS.md#estimation-properties) among many other interesting data on a users current state. Here is how we might print it out.
 
 ``` Objective-C
 -(void)receiveMotionDna:(MotionDna*)motionDna {
-  NSLog("%.8f %.8f %.8f %.8f\n",  motionDna.getLocation().heading,
-                                  motionDna.getLocation().localLocation.x,
-                                  motionDna.getLocation().localLocation.y,
-                                  motionDna.getLocation().localLocation.z);
+  NSLog("%.8f %.8f %.8f %.8f\n",  motionDna.location.local.heading,
+                                  motionDna.location.local.x,
+                                  motionDna.location.local.y,
+                                  motionDna.location.local.z);
 }
 ```
 ### Running the SDK
