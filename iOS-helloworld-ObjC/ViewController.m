@@ -77,9 +77,8 @@
 - (void)startDemo {
     _motionDnaSDK = [[MotionDnaSDK alloc] initWithDelegate:self];
     NSLog(@"SDK Version: %@",MotionDnaSDK.SDKVersion);
-    //    This functions starts up the SDK. You must pass in a valid developer's key in order for
-    //    the SDK to function. IF the key has expired or there are other errors, you may receive
-    //    those errors through the reportError() callback route.
+    //   The [startWithDeveloperKey:] method initiates the SDK when passed a valid developer key. If the key has expired or there are other errors, you will
+    //   be notified through the [reportStatus:message:] callback.
     [_motionDnaSDK startWithDeveloperKey:@"<--DEVELOPER-KEY-HERE-->"];
 }
 
